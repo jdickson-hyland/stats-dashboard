@@ -6,35 +6,55 @@
       "facetQueries":[],
       "facetFields":[],
       "outputType": "resultNumber",
-      "outputLabel": "documentos creados por admin"
+      "outputLabel": "Documentos creados por admin",
+      "outputIcon": "dashboard",
+      "outputIconColor": "#212121",
+      "outputCardbgColor": "#fffffa",
+      "outputTextColor": "#0000008a"
     },
     {
       "query": "* AND SITE:swsdp AND TYPE:'cm:content'",
       "facetQueries":[],
       "facetFields":[],
       "outputType": "resultNumber",
-      "outputLabel": "Numero de documentos en sitio: Sample web design site project"
+      "outputLabel": "Numero de documentos en SWSDP",
+      "outputIcon": "dashboard",
+      "outputIconColor": "#212121",
+      "outputCardbgColor": "#fffffa",
+      "outputTextColor": "#0000008a"
     },
     {
       "query": "* AND SITE:swsdp AND TYPE:'cm:folder'",
       "facetQueries":[],
       "facetFields":[],
       "outputType": "resultNumber",
-      "outputLabel": "Numero de carpetas en sitio: Sample web design site project"
+      "outputLabel": "Numero de carpetas en SWSDP",
+      "outputIcon": "dashboard",
+      "outputIconColor": "#212121",
+      "outputCardbgColor": "#fffffa",
+      "outputTextColor": "#0000008a"
     },
     {
       "query": "* AND TYPE:'cm:person'",
       "facetQueries":[],
       "facetFields":[],
       "outputType": "resultNumber",
-      "outputLabel": "Numero de usuarios totales"
+      "outputLabel": "Numero de usuarios totales",
+      "outputIcon": "dashboard",
+      "outputIconColor": "#212121",
+      "outputCardbgColor": "#fffffa",
+      "outputTextColor": "#0000008a"
     },
     {
       "query": "* AND TYPE:'venzia:statsConfig'",
       "facetQueries":[],
       "facetFields":[],
       "outputType": "resultNumber",
-      "outputLabel": "Numero de configuraciones de estadísticas"
+      "outputLabel": "Numero de configuraciones de estadísticas",
+      "outputIcon": "dashboard",
+      "outputIconColor": "#212121",
+      "outputCardbgColor": "#fffffa",
+      "outputTextColor": "#0000008a"
     }
   ],
   "outputPathFolder": "'\\/app:company_home\\/cm:global-reports'",

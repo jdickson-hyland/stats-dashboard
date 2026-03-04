@@ -1,0 +1,47 @@
+.resultNumber-card{
+    margin: 15px;
+    margin-left: 30px;
+    width: 25vw;
+    max-width: 300px; 
+    height: 100px;
+}
+
+.space-evenly{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.right-icon{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    mat-icon{
+        font-size: 40px ;
+        height: 40px;
+        width: 40px;
+    }
+}
+
+.stat-info{
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    .result-number{
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-size: 40px;
+    }
+    .result-label{
+        display: flex;
+        max-width: 200px;
+        font-size: 14px;
+        text-align: end;
+    }
+}
+
+mat-card-title{
+    font-size: 12px;
+}

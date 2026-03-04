@@ -1,14 +1,10 @@
 package cronjobs;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.StatsConfig;
 import model.StatsQueryResult;
 import model.StatsTypes;
 import org.alfresco.model.ContentModel;
-import org.alfresco.rest.api.model.Assoc;
-import org.alfresco.rest.api.model.Association;
-import org.alfresco.rest.api.search.impl.SearchMapper;
 import org.alfresco.service.ServiceRegistry;
 import org.alfresco.service.cmr.repository.*;
 import org.alfresco.service.cmr.search.*;
@@ -23,11 +19,9 @@ import org.slf4j.LoggerFactory;
 import utils.BytesToReadableConverter;
 import utils.VenziaModel;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class StatsGeneratorExecuter implements StatefulJob {
@@ -39,9 +33,12 @@ public class StatsGeneratorExecuter implements StatefulJob {
     }
 
     @Override
+    /**
+     * On execute retrieves all json Configs of type venzia:statconfig, parses each config and launch the needed queries to build an output json, then saves that json in the specified map
+     * */
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        System.out.println("------ CIUDADANO -------");
-
+        System.out.println("+++ Starting stats generator executer +++");
+        long startMilis = System.currentTimeMillis();
         //get json of type venzia:statConfig
         ResultSet rs = searchStatsConfigs();
         List<StatsConfig> configs = new ArrayList<>();
@@ -97,10 +94,13 @@ public class StatsGeneratorExecuter implements StatefulJob {
             }
 
         });
-
+        long endMilis = System.currentTimeMillis();
+        System.out.println("+++ Ending stats generator executer: reports generation time =  "+ (endMilis-startMilis) +" ms +++ ");
     }
 
-    /**Uses search service to search: TYPE:venzia:statsConfig*/
+    /**
+     * Uses search service to search: TYPE:venzia:statsConfig
+     * */
     public ResultSet searchStatsConfigs(){
         SearchParameters sp = new SearchParameters();
         sp.setLanguage(SearchService.LANGUAGE_FTS_ALFRESCO);
@@ -111,7 +111,9 @@ public class StatsGeneratorExecuter implements StatefulJob {
         return serviceRegistry.getSearchService().query(sp);
     }
 
-    /**Reads node content and parses as a statConfig object*/
+    /**
+     * Reads node content and parses as a statConfig object
+     * */
     public StatsConfig parseContentToStatConfig(ResultSetRow result){
         ContentReader contentReader = serviceRegistry.getContentService().getReader(result.getNodeRef(), ContentModel.PROP_CONTENT);
         String contentString = contentReader.getContentString();
@@ -119,7 +121,9 @@ public class StatsGeneratorExecuter implements StatefulJob {
         return config;
     }
 
-    /**Uses the query definition to parse and launch search service*/
+    /**
+     * Uses the query definition to parse and launch search service
+     * */
     public StatsQueryResult getResultsForQuery(JSONObject searchObject){
         if(searchObject.getString("outputType").equals(StatsTypes.SIZE)){ //works diferent to other searches
            return getResultsForSizeQuery(searchObject);
@@ -140,7 +144,9 @@ public class StatsGeneratorExecuter implements StatefulJob {
         return  queryResult;
     }
 
-    /**Receives Json object: {"query":"afts query", "label":"my label"}  and parses it into a search parameter correct format*/
+    /**
+     * Receives Json object: {"query":"afts query", "label":"my label"}  and parses it into a search parameter correct format
+     * */
     public String getFormatedFacetQuery(JSONObject facetQuery){
         if(facetQuery.getClass().equals(JSONObject.class)){
             String label = facetQuery.getString("label");
@@ -151,7 +157,9 @@ public class StatsGeneratorExecuter implements StatefulJob {
         return "";
     }
 
-    /**Size query has a different logic, it launches a recursive solr search and populates statsqueryResult with a hashmap:{size:formated string , numOfItems: docs found}*/
+    /**
+     * Size query has a different logic, it launches a recursive solr search and populates statsqueryResult with a hashmap:{size:formated string , numOfItems: docs found}
+     * */
     public StatsQueryResult getResultsForSizeQuery(JSONObject searchObject){
         if(searchObject.has("nodeId")){
             String id = searchObject.getString("nodeId");
@@ -172,32 +180,12 @@ public class StatsGeneratorExecuter implements StatefulJob {
              size = getNodeSizeWithSolr(ancestor, 0, pagination);
              formatedSize = BytesToReadableConverter.getReadableSize(size);
              numOfDocs = getNodeAncestorChilds(ancestor);
-            return new StatsQueryResult(searchObject, formatedSize, numOfDocs);
+             return new StatsQueryResult(searchObject, formatedSize, numOfDocs);
         }else {
             throw new RuntimeException("Missing argument nodeId");
         }
     }
 
-
-    /**For test size methods*/
-    public void getNodeSizeWithChildrens(){
-        System.out.println("------- GET NODE SIZE WITH CHILDRENS ------");
-        System.out.println("++ test Node  company home +++");
-        NodeRef testNodeRef = new NodeRef(StoreRef.STORE_REF_WORKSPACE_SPACESSTORE,"2ecd2808-1afd-4574-8d28-081afd95740c");
-        long startTimeNodeService = System.currentTimeMillis();
-        long size = getNodeSizeWithNodeService(testNodeRef);
-        long endTimeNodeService = System.currentTimeMillis();
-        System.out.println("size by listing childrens: " + BytesToReadableConverter.getSizeInGb(size) + "gb");
-        System.out.println("time duration: " + (endTimeNodeService - startTimeNodeService) + " ms");
-
-        long startTimeSolr = System.currentTimeMillis();
-        long sizeWithSolr = getNodeSizeWithSolr(testNodeRef,0,5000);
-        long endTimeSolr = System.currentTimeMillis();
-
-        System.out.println("size by listing with solr query " + BytesToReadableConverter.getSizeInGb(sizeWithSolr) + "gb");
-        System.out.println("time duration: " + (endTimeSolr - startTimeSolr) + " ms");
-
-    }
 
     /**@deprecated
      * slower, gives a higher value
@@ -219,7 +207,8 @@ public class StatsGeneratorExecuter implements StatefulJob {
         return size;
     }
 
-    /**faster, gives a lower value
+    /**
+     * faster, gives a lower value
      * in test for 424 docs this gives a time duration of 89ms and a size of 14.8mb,on average, speed is like half the nodeservice approach
      * */
     public long getNodeSizeWithSolr(NodeRef nodeRef, int skipCount, int length){

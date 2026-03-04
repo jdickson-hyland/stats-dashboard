@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model name="venzia:contentModel" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+
+    <!-- Optional meta-data about the model -->
+    <description>Stats Document Model</description>
+    <author>jesus marmol</author>
+    <version>1.0</version>
+
+    <imports>
+        <!-- Import Alfresco Dictionary Definitions -->
+        <import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d"/>
+        <!-- Import Alfresco Content Domain Model Definitions -->
+        <import uri="http://www.alfresco.org/model/content/1.0" prefix="cm"/>
+        <!-- Import Alfresco System Model Definitions -->
+        <import uri="http://www.alfresco.org/model/system/1.0" prefix="sys"/>
+    </imports>
+
+    <!-- Custom namespace for the ACME company -->
+    <namespaces>
+        <namespace uri="http://www.venzia.es/model/content/1.0" prefix="venzia"/>
+    </namespaces>
+
+    <!-- ===============================================================================================================
+        Constraints, Types, and Aspects go here...
+        -->
+
+    <types>
+        <!--
+            ACME Enterprise-wide Document root type.
+            All other custom document types would extend this one.
+        -->
+        <type name="venzia:statsConfig">
+            <title>Stats config</title>
+            <parent>cm:content</parent>
+            <properties>
+            </properties>
+        </type>
+        <type name="venzia:statsReport">
+            <title>Stats report</title>
+            <parent>cm:content</parent>
+            <properties>
+            </properties>
+        </type>
+    </types>
+</model>

@@ -2,7 +2,6 @@ package model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.alfresco.repo.search.impl.querymodel.impl.functions.In;
 import org.alfresco.service.cmr.search.ResultSet;
 import org.alfresco.util.Pair;
 import org.json.JSONObject;
@@ -14,17 +13,21 @@ import java.util.Map;
 public class StatsQueryResult {
     /**Search results*/
     ResultSet results; //search results
+    /**Output resultset when outputType is of type size*/
+    HashMap<String,String> sizeResultSet;
     /**resultNumber || numberGraph || size */
     String outputType;
-
     String outputLabel;
+    String outputIcon;
+    String outputIconColor;
+    String outputCardbgColor;
+    String outputTextColor;
     /**In number graph type it will export to json the response of facet queries instead of field buckets*/
     boolean hasFacetQueries;
     /**Field to export from the buckets list*/
     String fieldOutput;
 
-    /**Output resultset when outputType is of type size*/
-    HashMap<String,String> sizeResultSet;
+
     public StatsQueryResult(ResultSet results, String outputType, String outputLabel) {
         this.results = results;
         this.outputType = outputType;
@@ -37,6 +40,10 @@ public class StatsQueryResult {
         outputLabel = searchObject.getString("outputLabel");
         hasFacetQueries = searchObject.has("hasFacetQueries") ? searchObject.getBoolean("hasFacetQueries") : false;
         fieldOutput = searchObject.has("fieldOutput") ? searchObject.getString("fieldOutput") : "";
+        outputIcon = searchObject.has("outputIcon") ? searchObject.getString("outputIcon") : "";
+        outputIconColor = searchObject.has("outputIconColor") ? searchObject.getString("outputIconColor") : "";
+        outputCardbgColor =  searchObject.has("outputCardbgColor") ? searchObject.getString("outputCardbgColor") : "";
+        outputTextColor =  searchObject.has("outputTextColor") ? searchObject.getString("outputTextColor") : "";
     }
 
     /**Constructor invoked when outputType is of type size */
@@ -46,6 +53,10 @@ public class StatsQueryResult {
         sizeResultSet = new HashMap<>();
         sizeResultSet.put("size", size);
         sizeResultSet.put("numOfFounds", String.valueOf(childs));
+        outputIcon = searchObject.has("outputIcon") ? searchObject.getString("outputIcon") : "";
+        outputIconColor = searchObject.has("outputIconColor") ? searchObject.getString("outputIconColor") : "";
+        outputCardbgColor =  searchObject.has("outputCardbgColor") ? searchObject.getString("outputCardbgColor") : "";
+        outputTextColor =  searchObject.has("outputTextColor") ? searchObject.getString("outputTextColor") : "";
     }
 
     public ResultSet getResults() {
@@ -90,6 +101,10 @@ public class StatsQueryResult {
         jsonOutput.put("hasFacetQueries", hasFacetQueries);
         jsonOutput.put("fieldOutput", fieldOutput);
         jsonOutput.put("results", getResultsByType());
+        jsonOutput.put("outputIcon", outputIcon);
+        jsonOutput.put("outputIconColor", outputIconColor);
+        jsonOutput.put("outputCardbgColor", outputCardbgColor);
+        jsonOutput.put("outputTextColor", outputTextColor);
         return jsonOutput;
     }
 

@@ -1,0 +1,16 @@
+<adf-toolbar>
+    <adf-toolbar-title>Dashboard</adf-toolbar-title>
+</adf-toolbar>
+<div class="centered" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+</div>
+<div id="dashboard" class="stat-wrapper" *ngIf="!loading">
+    <mat-card *ngFor="let report of jsonReports">
+        <mat-card-title>{{report.id}}</mat-card-title>
+        <div class="row">
+            <ng-container *ngFor="let stat of report.results">
+                <app-stat-display [stat]="stat"></app-stat-display>
+            </ng-container>
+        </div>
+    </mat-card>
+</div>
