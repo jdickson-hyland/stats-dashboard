@@ -1,4 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Chart } from 'chart.js/auto';
+import { Colors } from 'chart.js';
+import { getRandomPalete } from '../colors';
+
+Chart.register(Colors);
 
 @Component({
   selector: 'app-stat-display',
@@ -7,16 +12,75 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 
 /**Stats dashboard pases each stat to this component, this handles the parsing and rendering */
-export class StatDisplayComponent implements OnInit {
+export class StatDisplayComponent implements OnInit, AfterViewInit {
 
   @Input("stat") stat; //object {outputLabel, outputType, results} diferent outputType can have diferent props
   defaultIcon="dashboard";
   defaultIconColor="#212121";
-  defaultBgColor="#333";
+  defaultBgColor="#fff";
   defaultTextColor = "#000000";
+  options = {
+    plugins: {
+      colors: {
+        enabled:false,
+        forceOverride:true
+      },
+      legend:{display:false},
+      title: {
+        display: true,
+        text: ''
+    }
+    },
+    responsive:true,
+    maintainAspectRatio:true,
+    scales:{
+      y:{
+        grid:{
+          borderColor:"green",
+          borderWith:1,
+          drawOnChartArea:false,
+          drawBorder:false
+        }
+      },
+      x:{
+        grid:{
+          borderColor:"green",
+          borderWith:1,
+          drawOnChartArea:false,
+          drawBorder:false
+        }
+      }
+    }
+  };
+  
+
+  @ViewChild('chartCanvas') chartCanvas:ElementRef<HTMLCanvasElement>;
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  ngAfterViewInit(): void {
+    if(this.stat.outputType=="numberGraph"){
+      let results = [];
+      results = JSON.parse(this.stat.results);
+      let resultsToChar = results.map( result => {
+        return {x:result[0], y:result[1]}});
+      this.options.plugins.title.text = this.stat.outputLabel
+      let chart = new Chart(this.chartCanvas.nativeElement,{
+        type:'bar',
+        data: {
+          datasets:[{
+            label:"eeeee",
+            data:resultsToChar,
+            backgroundColor: getRandomPalete(), 
+          }]
+        },
+        options:this.options 
+      })
+      console.log(this.stat.results)
+      console.log(results)
+    }
   }
 
   getbgcolor(){

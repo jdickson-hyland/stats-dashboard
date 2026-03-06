@@ -6,6 +6,28 @@
     height: 100px;
 }
 
+.numberGraph-card{
+    margin: 15px;
+    margin-left: 30px;
+    width: 70vw;
+    height: 300px;
+    mat-card-content{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        position:relative;
+    }
+    canvas{
+        max-width: 80%;
+        max-height: 200px;
+    }
+    //max-width: 60vw; 
+    //height: 400px;
+}
+.numberGraph-title{
+    font-size: 16px;
+}
 .space-evenly{
     display: flex;
     flex-direction: row;
