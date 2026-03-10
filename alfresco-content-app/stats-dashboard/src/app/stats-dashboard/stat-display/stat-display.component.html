@@ -41,3 +41,13 @@
         </mat-card-content>
     </mat-card>
 </ng-container> 
+
+<!--Stats of type number graph display a bar chart-->
+<ng-container *ngIf="stat.outputType=='timeGraph'">
+    <mat-card class="numberGraph-card" [style]="'background-color:'+getbgcolor()+' ;color:'+getTextColor()+';'">
+        <mat-card-title class="numberGraph-title">{{stat.outputLabel}}</mat-card-title>
+        <mat-card-content>
+            <canvas #chartCanvas  ></canvas>
+        </mat-card-content>
+    </mat-card>
+</ng-container>

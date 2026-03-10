@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * TODO: extract helper method to a service
+ * */
 
 public class StatsGeneratorExecuter implements StatefulJob {
     private static final Logger LOG = LoggerFactory.getLogger(StatsGeneratorExecuter.class);
@@ -201,6 +204,7 @@ public class StatsGeneratorExecuter implements StatefulJob {
      * ]</code>
      * <br>If there is no filter filter will be empty and label will be outputLabel
      * */
+    //TODO: Refactor this method to avoid duplicate code
     public StatsQueryResult getResultsForTimeQuery(JSONObject searchObject){
         List<TimeFacetedSearchResultSet> timeFacetedSearchResultSets = new ArrayList<>();
         SearchParameters sp = getDefaultSearchParameters();

@@ -60,13 +60,16 @@ export class StatDisplayComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     if(this.stat.outputType=="size"){ //results is an object: {size=12mb, numOfFounds=120}
       this.stat.results=JSON.parse(this.stat.results.replace(/=/g, ":"));
-      console.log(this.stat)
     }
   }
 
   
 
   ngAfterViewInit(): void {
+    this.initGraph();
+  }
+
+  initGraph(){
     if(this.stat.outputType=="numberGraph"){
       let results = [];
       results = JSON.parse(this.stat.results);
@@ -81,6 +84,34 @@ export class StatDisplayComponent implements OnInit, AfterViewInit {
             backgroundColor: getRandomPalete(), 
           }]
         },
+        options:this.options 
+      })
+    }else if(this.stat.outputType=="timeGraph"){
+      //time graph is [ {dataset1}, {dataSet2} ]
+      let results =  [];
+      results = JSON.parse(this.stat.results);
+      let labels = Object.keys(results[0])//use param order to extract array of labels and sort
+      labels = labels.sort( (labelA, labelB) => {
+        return results[0][labelA].order > results[0][labelB].order ? 1 : -1 
+      });
+      let dataset = []; //[ {label, data} , {label, data} ];
+      let colors = getRandomPalete();
+      let indexColor = 0;
+      results.forEach( (result, index) => {
+        indexColor ++;
+        indexColor = indexColor > colors.length ? 0 : indexColor; //restart if array is oversized 
+        const resultLabel = result[labels[0]].label;
+        const resultData = [];
+        labels.forEach(label => {resultData.push(result[label].count )});
+        dataset.push( {label:resultLabel, data:resultData, borderColor: colors[indexColor], backgroundColor:colors[indexColor] } );
+      })
+      let data = {
+        labels:labels,
+        datasets: dataset
+      };
+      let chart = new Chart(this.chartCanvas.nativeElement,{
+        type:'line',
+        data: data,
         options:this.options 
       })
     }
