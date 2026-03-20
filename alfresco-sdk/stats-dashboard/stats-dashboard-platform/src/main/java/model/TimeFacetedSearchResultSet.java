@@ -1,11 +1,10 @@
 package model;
 
 import org.alfresco.service.cmr.search.ResultSet;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**Objet that stores resultSets of a faceted search, as json is:
- *  {filter:cm:created, label: admin, resultSet: resusltet for a query with cm:creator=admin filter},
+ * <br><pre> {filter:cm:created, label: admin, resultSet: resusltset for a query with cm:creator=admin filter},</pre>
  * */
 public class TimeFacetedSearchResultSet {
     String filter;
@@ -17,12 +16,14 @@ public class TimeFacetedSearchResultSet {
         this.label = label;
         this.facetResultSet = facetResultSet;
     }
-    /**Returns data as JSONobject
+
+    /**Returns data as JSONobject.<br>
      * Uses searchconfig to get the order for each result, ouput as:
-     *   {
+     *  <pre>    {
      *   "today":{"count":2, "order":0, "label":"admin", filter:"cm:created"},
-     *   "yesterday":{"count":2, "order":0, "label":"admin",filter:"cm:created"}}
+     *   "yesterday":{"count":2, "order":0, "label":"admin",filter:"cm:created"}
      *   }
+     *   </pre>
      * */
     public JSONObject toJSONObject(JSONObject searchConfig){
         JSONObject jsonOutput = new JSONObject();
@@ -30,7 +31,10 @@ public class TimeFacetedSearchResultSet {
             if(facet.getClass().equals(JSONObject.class)){
                 int order = ((JSONObject) facet).getInt("order");
                 String facetLabel = ((JSONObject) facet).getString("label");
+                System.out.println(facetLabel);
+                System.out.println(facetResultSet.getFacetQueries());
                 int count = facetResultSet.getFacetQueries().getOrDefault(facetLabel, 0);
+                System.out.println("------ procesing facet. label : "+facetLabel);
                 JSONObject facetContent = new JSONObject().put("count", count).put("order", order).put("label", label).put("filter", filter);
                 jsonOutput.put(facetLabel, facetContent);
             }

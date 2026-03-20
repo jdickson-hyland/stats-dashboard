@@ -26,6 +26,7 @@
         <property name="serviceRegistry">
             <ref bean="ServiceRegistry" />
         </property>
+        <property name="statGeneratorHelper" ref="venzia.StatGeneratorHelper"/>
     </bean>
 
     <!--Job details -->

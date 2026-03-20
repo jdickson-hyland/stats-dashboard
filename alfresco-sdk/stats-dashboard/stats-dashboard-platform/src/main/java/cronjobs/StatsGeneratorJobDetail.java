@@ -8,7 +8,9 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
 
-
+/**
+ * launches StatGeneratorExecuter
+ * */
 public class StatsGeneratorJobDetail extends AbstractScheduledLockedJob implements StatefulJob {
 
 

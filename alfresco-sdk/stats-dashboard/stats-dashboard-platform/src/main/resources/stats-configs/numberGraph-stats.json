@@ -8,7 +8,7 @@
       "hasFacetQueries": false,
       "fieldOutput": "creator",
       "outputType": "numberGraph",
-      "outputLabel": "documentos creados por Usuario"
+      "outputLabel": "documentos created by User"
     },
     {
       "query": "* AND TYPE:'cm:content' AND -creator:System",

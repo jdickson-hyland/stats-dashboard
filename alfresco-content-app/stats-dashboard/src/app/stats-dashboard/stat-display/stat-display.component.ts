@@ -105,10 +105,12 @@ export class StatDisplayComponent implements OnInit, AfterViewInit {
         labels:labels,
         datasets: dataset
       };
+      let option = {...this.options};
+      option.plugins.legend.display = true
       let chart = new Chart(this.chartCanvas.nativeElement,{
         type:'line',
         data: data,
-        options:this.options 
+        options:option
       })
     }
   }

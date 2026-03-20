@@ -24,9 +24,14 @@ import org.json.JSONObject;
  </pre>
  * */
 public class StatsConfig {
+    /**Unique id of that stat config*/
     String id;
+    /**Path in which the output json will be saved*/
     String outputPathFolder;
+    /**Name of the generated json, if path+name already exist it will override that doc content!!*/
     String outputName;
+
+    /**Set of queries for each stat, a query is a JSONobject, with several fields, check readme*/
     JSONArray queries;
     public StatsConfig(String json) {
         JSONObject jsonObject = new JSONObject(json);

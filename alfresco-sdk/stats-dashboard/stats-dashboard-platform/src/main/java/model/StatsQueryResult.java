@@ -12,12 +12,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Each query in the configs will be launched, and it results saved as StatQueryResult Class
+ * this class provides helper methods to output the result in a json format and extract and parse results
+ * to a readable and manageable output
+ * */
 public class StatsQueryResult {
     /**Search results*/
     ResultSet results; //search results
+
     /**Output resultset when outputType is of type size*/
     HashMap<String,String> sizeResultSet;
 
+    /**Search result when output is of type timeGraph*/
     List<TimeFacetedSearchResultSet> timeResultSets;
 
     /**resultNumber || numberGraph || timeGraph|| size */
@@ -32,6 +39,7 @@ public class StatsQueryResult {
     boolean hasFacetQueries;
     /**Field to export from the buckets list*/
     String fieldOutput;
+    /**Original config of the query to*/
     JSONObject searchConfig;
 
 
@@ -41,6 +49,7 @@ public class StatsQueryResult {
         this.outputLabel = outputLabel;
     }
 
+    /**Default constructor*/
     public StatsQueryResult(ResultSet results, JSONObject searchObject){
         setCommonProperties(searchObject);
         this.results = results;
@@ -57,6 +66,7 @@ public class StatsQueryResult {
         sizeResultSet.put("\"numOfFounds\"", "\""+String.valueOf(childs)+"\"");
     }
 
+    /**Constructor for time graph type*/
     public StatsQueryResult(List<TimeFacetedSearchResultSet> results, JSONObject searchObject){
         setCommonProperties(searchObject);
         this.timeResultSets = results;
@@ -100,17 +110,7 @@ public class StatsQueryResult {
         this.outputLabel = outputLabel;
     }
 
-
-    @Deprecated(since = "use to hashmap instead")
-    public String toJson() throws JsonProcessingException {
-        HashMap<String, Object> jsonOutput = new HashMap<>();
-        jsonOutput.put("outputType", getOutputType());
-        jsonOutput.put("outputLabel", getOutputLabel());
-        jsonOutput.put("results", getResultsByType());
-        return new ObjectMapper().writeValueAsString(jsonOutput);
-    }
-
-
+    /**Method invokeD to extract object values as a entry of the final stat json*/
     public HashMap<String, Object> toHashmap(){
         HashMap<String, Object> jsonOutput = new HashMap<>();
         jsonOutput.put("outputType", getOutputType());
@@ -131,17 +131,15 @@ public class StatsQueryResult {
         if(outputType.equals(StatsTypes.RESULT_NUMBER)){
             return String.valueOf(results.getNumberFound());
         }else if(outputType.equals(StatsTypes.NUMBER_GRAPH)){
-            if(!hasFacetQueries){
+
+            if(!hasFacetQueries){ //output contains result from fieldFacet
                 List<Pair<String, Integer>> fieldsBuckets = results.getFieldFacet(fieldOutput);
                 fieldsBuckets.forEach(pair  -> pair.setFirst("\""+pair.getFirst()+"\"")); //escaped commas for parsing with (JSON.parse(input.results[0].results)
                 return fieldsBuckets.toString().replace("(", "[").replace(")", "]");
-            }else {
-                //output object
+            }else {//output contains results from facetQueries
                 Map<String, Integer> facetQueries = results.getFacetQueries();
                 List<Pair<String, Integer>> toPairs = new ArrayList<>();
-                for(Map.Entry<String,Integer> facet:facetQueries.entrySet()){
-                    toPairs.add(new Pair<>("\""+facet.getKey()+"\"", facet.getValue()));
-                }
+                for(Map.Entry<String,Integer> facet:facetQueries.entrySet()){toPairs.add(new Pair<>("\""+facet.getKey()+"\"", facet.getValue()));}
                 return toPairs.toString().replace("(", "[").replace(")", "]");
             }
         }else if(outputType.equals(StatsTypes.TIME_GRAPH)){

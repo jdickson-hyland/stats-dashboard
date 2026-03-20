@@ -14,7 +14,6 @@ export class StatsDashboardComponent implements OnInit {
   jsonReports = []; //array of objects {}
   constructor( 
     private searchService:SearchService, 
-    private contentService:ContentService,
     private nodeService:NodesApiService
   ) { }
 
