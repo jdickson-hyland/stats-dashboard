@@ -1,7 +1,7 @@
 {
   "id": "Site reports",
   "comment": "based on this reports uses cases https://connect.hyland.com/t5/alfresco-forum/alfresco-25-3-monitoring-stats-suggestion/td-p/496468",
-  "outputPathFolder": "'\\/app:company_home\\/st:sites\\/cm:monitoring-use-case\\/cm:documentLibrary\\/cm:stats_x0020_reports'",
+    "outputPathFolder": "'\\/app:company_home\\/st:sites\\/cm:monitoring-use-case\\/cm:documentLibrary\\/cm:stats_x0020_reports'",
   "outputName": "sites-report.json",
   "queries":[
     {
