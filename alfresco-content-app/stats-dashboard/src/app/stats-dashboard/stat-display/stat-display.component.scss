@@ -25,6 +25,12 @@
     //max-width: 60vw; 
     //height: 400px;
 }
+
+.doughnut-chart{
+    canvas{
+        max-height:250px
+    }
+}
 .numberGraph-title{
     font-size: 16px;
 }

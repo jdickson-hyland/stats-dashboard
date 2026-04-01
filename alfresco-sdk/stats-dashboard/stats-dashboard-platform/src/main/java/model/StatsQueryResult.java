@@ -130,7 +130,7 @@ public class StatsQueryResult {
     public String getResultsByType(){
         if(outputType.equals(StatsTypes.RESULT_NUMBER)){
             return String.valueOf(results.getNumberFound());
-        }else if(outputType.equals(StatsTypes.NUMBER_GRAPH)){
+        }else if(outputType.equals(StatsTypes.NUMBER_GRAPH) || outputType.equals(StatsTypes.DOUGHNUT_CHART)){
 
             if(!hasFacetQueries){ //output contains result from fieldFacet
                 List<Pair<String, Integer>> fieldsBuckets = results.getFieldFacet(fieldOutput);

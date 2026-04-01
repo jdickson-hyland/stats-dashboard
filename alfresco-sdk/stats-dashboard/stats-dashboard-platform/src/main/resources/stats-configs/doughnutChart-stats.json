@@ -1,0 +1,39 @@
+{
+  "id": "doughnut graph stats",
+  "queries":[
+    {
+      "query": "TYPE:'cm:content'",
+      "facetQueries":[],
+      "facetFields":["creator"],
+      "hasFacetQueries": false,
+      "fieldOutput": "creator",
+      "outputType": "doughnutChart",
+      "outputLabel": "documentos created by User"
+    },
+    {
+      "query": "TYPE:'cm:content'",
+      "facetQueries":[],
+      "facetFields":["content.mimetype"],
+      "hasFacetQueries": false,
+      "fieldOutput": "content.mimetype",
+      "outputType": "doughnutChart",
+      "outputLabel": "documents by myimetype",
+      "outputIcon": "folder",
+      "outputIconColor": "#3c493f",
+      "outputCardbgColor": "#c8e087",
+      "outputTextColor": "#3c493f"
+    },
+    {
+      "query": "TYPE:'cm:content'",
+      "facetQueries":[],
+      "facetFields":["SITE"],
+      "hasFacetQueries": false,
+      "fieldOutput": "SITE",
+      "outputType": "doughnutChart",
+      "outputLabel": "documents by site",
+      "outputIcon": "folder"
+    }
+  ],
+  "outputPathFolder": "'\\/app:company_home\\/cm:global-reports'",
+  "outputName": "doughnutChart-report.json"
+}

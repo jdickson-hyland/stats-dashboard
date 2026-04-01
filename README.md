@@ -81,7 +81,7 @@ mandatory parameters
 ![image](images/size-preview.png)
 
 
-It will launch a recursive search to find the weight of the indicated nodeId, if nodeId is a document it will return its size. If its a flder it will travel its tree to get the combined size and number of chldrens and grandchildren.
+It will launch a recursive search to find the weight of the indicated nodeId, if nodeId is a document it will return its size. If its a folder it will travel its tree to get the combined size and number of chldrens and grandchildren.
 
 Pagination indicates the max-items in the batches processing while traversing the child nodes. 
 
@@ -164,7 +164,7 @@ For a time report you have to use facetqueries to define a temporal window and s
       "outputLabel": "documents created in the last week by creator"
     }
 ```
-With the inclusion of facet field the generator will laund a girst query, the it will obtain the facet buckets and for each facet bucket will launch a query with that bucked as a filter. **this can be expensive if the facet field has too much entries, use it with care**
+With the inclusion of facet field the generator will launch a first query, it will obtain the facet buckets and for each facet bucket will launch a query with that bucked as a filter. **this can be expensive if the facet field has too much entries, use it with care**
 ![image](images/timeGraph-facetfieldquery-preview.png)
 
 3. a facet **limited search**,for example: document creation in the sites swdsp,use-case-example and testSite.

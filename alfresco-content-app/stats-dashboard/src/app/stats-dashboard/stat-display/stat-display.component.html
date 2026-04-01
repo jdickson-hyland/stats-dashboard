@@ -24,6 +24,16 @@
     </mat-card>
 </ng-container>
 
+<!--Stats of type number graph display a doughnut chart-->
+<ng-container *ngIf="stat.outputType=='doughnutChart'">
+    <mat-card class="numberGraph-card doughnut-chart" [style]="'background-color:'+getbgcolor()+' ;color:'+getTextColor()+';'">
+        <mat-card-title class="numberGraph-title">{{stat.outputLabel}}</mat-card-title>
+        <mat-card-content>
+            <canvas #chartCanvas></canvas>
+        </mat-card-content>
+    </mat-card>
+</ng-container>
+
 <!--Stats of type size display a card with size and number of docs-->
 <ng-container *ngIf="stat.outputType=='size'">
     <mat-card class="resultNumber-card" [style]="'background-color:'+getbgcolor()+' ;color:'+getTextColor()+';'">

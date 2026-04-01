@@ -71,22 +71,55 @@ export class StatDisplayComponent implements OnInit, AfterViewInit {
 
   initGraph(){
     if(this.stat.outputType=="numberGraph"){
-      let results = [];
-      results = JSON.parse(this.stat.results);
-      let resultsToChar = results.map( result => { return {x:result[0], y:result[1]} });
-      this.options.plugins.title.text = this.stat.outputLabel
-      let chart = new Chart(this.chartCanvas.nativeElement,{
-        type:'bar',
-        data: {
-          datasets:[{
-            data:resultsToChar,
-            backgroundColor: getRandomPalete(), 
-          }]
-        },
-        options:this.options 
-      })
-    }else if(this.stat.outputType=="timeGraph"){//time graph is [ {dataset1}, {dataSet2} ]
-      let results =  [];
+      this.getBarChartGraph();
+    }else if(this.stat.outputType=="doughnutChart"){
+      this.getDoughnutChart();
+    }
+    else if(this.stat.outputType=="timeGraph"){//time graph is [ {dataset1}, {dataSet2} ]
+      this.getLineChart()
+    }
+  }
+
+  getBarChartGraph(){
+    let results = [];
+    results = JSON.parse(this.stat.results);
+    let resultsToChar = results.map( result => { return {x:result[0], y:result[1]} });
+    this.options.plugins.title.text = this.stat.outputLabel
+    let chart = new Chart(this.chartCanvas.nativeElement,{
+      type:'bar',
+      data: {
+        datasets:[{
+          data:resultsToChar,
+          backgroundColor: getRandomPalete(), 
+        }]
+      },
+      options:this.options 
+    })
+  }
+
+  getDoughnutChart(){
+    let results = [];
+    results = JSON.parse(this.stat.results);
+    let resultsLabels = results.map(result => result[0]);
+    let resultsData = results.map(result =>  result[1]);
+    this.options.plugins.title.text = this.stat.outputLabel
+    this.options.scales = null;
+    this.options.plugins.legend.display = true
+    let chart = new Chart(this.chartCanvas.nativeElement,{
+      type:'doughnut',
+      data: {
+        datasets:[{
+          data:resultsData,
+          backgroundColor: getRandomPalete(), 
+        }],
+        labels: resultsLabels
+      },
+      options:this.options 
+    })
+  }
+
+  getLineChart(){
+    let results =  [];
       results = JSON.parse(this.stat.results);
       let labels = Object.keys(results[0])//use param order to extract array of labels and sort
       labels = labels.sort( (labelA, labelB) =>  results[0][labelA].order > results[0][labelB].order ? 1 : -1 );
@@ -112,7 +145,6 @@ export class StatDisplayComponent implements OnInit, AfterViewInit {
         data: data,
         options:option
       })
-    }
   }
 
   getbgcolor(){

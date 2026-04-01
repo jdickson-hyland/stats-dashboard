@@ -31,10 +31,7 @@ public class TimeFacetedSearchResultSet {
             if(facet.getClass().equals(JSONObject.class)){
                 int order = ((JSONObject) facet).getInt("order");
                 String facetLabel = ((JSONObject) facet).getString("label");
-                System.out.println(facetLabel);
-                System.out.println(facetResultSet.getFacetQueries());
                 int count = facetResultSet.getFacetQueries().getOrDefault(facetLabel, 0);
-                System.out.println("------ procesing facet. label : "+facetLabel);
                 JSONObject facetContent = new JSONObject().put("count", count).put("order", order).put("label", label).put("filter", filter);
                 jsonOutput.put(facetLabel, facetContent);
             }
