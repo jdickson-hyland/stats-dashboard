@@ -320,10 +320,10 @@ public class StatGeneratorHelper {
      * the statconfig object and the results
      * Gets or create the output json file and writes the output in it
      * */
-    public void saveJsonInPath(ResultSet folderPathSearch, StatsConfig config, Map<String, Object> jsonOutput){
-        NodeRef prevExist = serviceRegistry.getNodeService().getChildByName(folderPathSearch.getNodeRef(0), ContentModel.ASSOC_CONTAINS, config.getOutputName());
+    public void saveJsonInPath(NodeRef destinationFolder, StatsConfig config, Map<String, Object> jsonOutput){
+        NodeRef prevExist = serviceRegistry.getNodeService().getChildByName(destinationFolder, ContentModel.ASSOC_CONTAINS, config.getOutputName());
         if(prevExist == null){ //first creation
-            prevExist = serviceRegistry.getFileFolderService().create(folderPathSearch.getNodeRef(0), config.getOutputName(), VenziaModel.TYPE_STATS_REPORT).getNodeRef();
+            prevExist = serviceRegistry.getFileFolderService().create(destinationFolder, config.getOutputName(), VenziaModel.TYPE_STATS_REPORT).getNodeRef();
         }
         try {
             NodeRef workingCopy;
@@ -347,35 +347,25 @@ public class StatGeneratorHelper {
 
     /**
      * Ensures the configured output path exists. Missing folders are created under Company Home.
-     * Returns a search result pointing to the target destination folder.
+     * Returns the NodeRef of the target destination folder.
      */
-    public ResultSet ensureOutputPathExists(String destinationFolderPath) {
+    public NodeRef ensureOutputPathExists(String destinationFolderPath) {
         String normalizedPath = normalizePath(destinationFolderPath);
-        ResultSet folderPathSearch = serviceRegistry.getSearchService().query(
-            StoreRef.STORE_REF_WORKSPACE_SPACESSTORE,
-            SearchService.LANGUAGE_FTS_ALFRESCO,
-            buildPathQuery(normalizedPath)
-        );
-
-        if (folderPathSearch.length() != 0) {
-            return folderPathSearch;
+        NodeRef existingTarget = findNodeByPath(normalizedPath);
+        if (existingTarget != null) {
+            return existingTarget;
         }
 
         if (!normalizedPath.startsWith("/app:company_home")) {
             throw new RuntimeException("Output path must start with /app:company_home. Received: " + destinationFolderPath);
         }
 
-        ResultSet companyHomeSearch = serviceRegistry.getSearchService().query(
-            StoreRef.STORE_REF_WORKSPACE_SPACESSTORE,
-            SearchService.LANGUAGE_FTS_ALFRESCO,
-            "PATH:\"/app:company_home\""
-        );
-
-        if (companyHomeSearch.length() == 0) {
+        NodeRef companyHome = findNodeByPath("/app:company_home");
+        if (companyHome == null) {
             throw new RuntimeException("Could not resolve /app:company_home while creating output path: " + destinationFolderPath);
         }
 
-        NodeRef current = companyHomeSearch.getNodeRef(0);
+        NodeRef current = companyHome;
         String relativePath = normalizedPath.substring("/app:company_home".length());
         String[] segments = relativePath.split("/");
 
@@ -391,21 +381,17 @@ public class StatGeneratorHelper {
             NodeRef child = serviceRegistry.getNodeService().getChildByName(current, ContentModel.ASSOC_CONTAINS, folderName);
             if (child == null) {
                 child = serviceRegistry.getFileFolderService().create(current, folderName, ContentModel.TYPE_FOLDER).getNodeRef();
+            } else if (!serviceRegistry.getDictionaryService().isSubClass(serviceRegistry.getNodeService().getType(child), ContentModel.TYPE_FOLDER)) {
+                throw new RuntimeException("Path segment exists but is not a folder: " + folderName + " in " + destinationFolderPath);
             }
             current = child;
         }
 
-        ResultSet createdPathSearch = serviceRegistry.getSearchService().query(
-            StoreRef.STORE_REF_WORKSPACE_SPACESSTORE,
-            SearchService.LANGUAGE_FTS_ALFRESCO,
-            buildPathQuery(normalizedPath)
-        );
-
-        if (createdPathSearch.length() == 0) {
+        if (current == null || !serviceRegistry.getNodeService().exists(current)) {
             throw new RuntimeException("Output path could not be created: " + destinationFolderPath);
         }
 
-        return createdPathSearch;
+        return current;
     }
 
     private String normalizePath(String destinationFolderPath) {
@@ -415,7 +401,7 @@ public class StatGeneratorHelper {
         }
 
         normalizedPath = normalizedPath.trim();
-        if (normalizedPath.startsWith("'") && normalizedPath.endsWith("'")) {
+        while (normalizedPath.startsWith("'") && normalizedPath.endsWith("'")) {
             normalizedPath = normalizedPath.substring(1, normalizedPath.length() - 1);
         }
 

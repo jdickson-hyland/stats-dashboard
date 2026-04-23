@@ -119,12 +119,12 @@ public class StatsGeneratorExecuter implements StatefulJob {
             //save stat report in path
             String destinationFolderPath = config.getOutputPathFolder();
             try {
-                ResultSet folderPathSearch = statGeneratorHelper.ensureOutputPathExists(destinationFolderPath);
-                if(folderPathSearch.length() != 0){
+                NodeRef destinationFolder = statGeneratorHelper.ensureOutputPathExists(destinationFolderPath);
+                if(destinationFolder != null){
                    if (LOG.isDebugEnabled()) {
                        LOG.debug("Saving report for config id='{}' into destination='{}'", config.getId(), destinationFolderPath);
                    }
-                   statGeneratorHelper.saveJsonInPath(folderPathSearch, config, jsonOutput);
+                   statGeneratorHelper.saveJsonInPath(destinationFolder, config, jsonOutput);
                    if (LOG.isDebugEnabled()) {
                        LOG.debug("Saved report for config id='{}' successfully", config.getId());
                    }
